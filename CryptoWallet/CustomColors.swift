@@ -10,4 +10,6 @@ extension UIColor {
     static let sweetPink = UIColor(red: 255/255, green: 154/255, blue: 178/255, alpha: 1)
     static let dark = UIColor(red: 25/255, green: 28/255, blue: 50/255, alpha: 1)
     static let ebonyClay = UIColor(red: 38/255, green: 39/255, blue: 60/255, alpha: 1)
+    
+    static let unselectedTabBarItem = UIColor(red: 206/255, green: 208/255, blue: 222/255, alpha: 1)
 }
