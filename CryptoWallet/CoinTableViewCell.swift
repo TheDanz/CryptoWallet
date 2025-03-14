@@ -1,0 +1,140 @@
+import UIKit
+
+final class CoinTableViewCell: UITableViewCell {
+    
+    static let identifier = "CoinTableViewCell"
+    
+    // MARK: Views
+    
+    private lazy var coinImageView = {
+        let imageView = UIImageView()
+        imageView.layer.cornerRadius = 25
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private lazy var fullNameLabel = {
+        let label = UILabel()
+        label.textColor = .ebonyClay
+        label.font = .header3
+        label.numberOfLines = 1
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var shortNameLabel = {
+        let label = UILabel()
+        label.textColor = .mountainMist
+        label.font = .smallPercentage
+        label.numberOfLines = 1
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var valueLabel = {
+        let label = UILabel()
+        label.textColor = .ebonyClay
+        label.font = .header3
+        label.numberOfLines = 1
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var volatilityLabel = {
+        let label = UILabel()
+        label.textColor = .mountainMist
+        label.font = .smallPercentage
+        label.numberOfLines = 1
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var trendImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    // MARK: Inits
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupUI()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: Setup UI
+    
+    private func setupUI() {
+        setupView()
+        setupCoinImageView()
+        setupFullNameLabel()
+        setupShortNameLabel()
+        setupValueLabel()
+        setupVolatilityLabel()
+        setuptrendImageView()
+    }
+    
+    private func setupView() {
+        backgroundColor = .clear
+        addSubview(coinImageView)
+        addSubview(fullNameLabel)
+        addSubview(shortNameLabel)
+        addSubview(valueLabel)
+        addSubview(volatilityLabel)
+        addSubview(trendImageView)
+    }
+    
+    private func setupCoinImageView() {
+        coinImageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        coinImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 25).isActive = true
+        coinImageView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        coinImageView.widthAnchor.constraint(equalToConstant: 50).isActive = true
+    }
+    
+    private func setupFullNameLabel() {
+        fullNameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
+        fullNameLabel.leadingAnchor.constraint(equalTo: coinImageView.trailingAnchor, constant: 19).isActive = true
+    }
+    
+    private func setupShortNameLabel() {
+        shortNameLabel.topAnchor.constraint(equalTo: fullNameLabel.bottomAnchor, constant: 3).isActive = true
+        shortNameLabel.leadingAnchor.constraint(equalTo: coinImageView.trailingAnchor, constant: 19).isActive = true
+    }
+    
+    private func setupValueLabel() {
+        valueLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
+        valueLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -25).isActive = true
+    }
+    
+    private func setupVolatilityLabel() {
+        volatilityLabel.topAnchor.constraint(equalTo: valueLabel.bottomAnchor, constant: 3).isActive = true
+        volatilityLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -25).isActive = true
+    }
+    
+    private func setuptrendImageView() {
+        trendImageView.centerYAnchor.constraint(equalTo: volatilityLabel.centerYAnchor).isActive = true
+        trendImageView.trailingAnchor.constraint(equalTo: volatilityLabel.leadingAnchor, constant: -6).isActive = true
+    }
+    
+    // MARK: Configure
+    
+    func configure(
+        image: UIImage,
+        fullName: String,
+        shortName: String,
+        value: String,
+        volatility: String,
+        trend: Bool
+    ) {
+        self.coinImageView.image = image
+        self.fullNameLabel.text = fullName
+        self.shortNameLabel.text = shortName
+        self.valueLabel.text = "$" + value
+        self.volatilityLabel.text = volatility + "%"
+        self.trendImageView.image = trend ? .arrowUp : .arrowDown
+    }
+}

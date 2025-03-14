@@ -79,7 +79,8 @@ final class HomeViewController: UIViewController {
     
     private lazy var coinsTableView = {
         let tableView = UITableView()
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(CoinTableViewCell.self, forCellReuseIdentifier: CoinTableViewCell.identifier)
+        tableView.separatorStyle = .none
         tableView.backgroundColor = .clear
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
@@ -200,15 +201,27 @@ final class HomeViewController: UIViewController {
 
 extension HomeViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        10
+        30
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        UITableViewCell()
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CoinTableViewCell.identifier) as? CoinTableViewCell else {
+            return UITableViewCell()
+        }
+        cell.configure(
+            image: UIImage(systemName: "eye")!,
+            fullName: String(Int.random(in: 1...1000)),
+            shortName: String(Int.random(in: 1...1000)),
+            value: String(Int.random(in: 1...1000)),
+            volatility: String(Int.random(in: 1...1000)),
+            trend: Bool.random()
+        )
+        return cell
     }
 }
 
 extension HomeViewController: UITableViewDelegate {
-
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        70
+    }
 }
-
