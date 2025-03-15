@@ -1,3 +1,5 @@
 "loginPlaceholder" = "Username";
 "passwordPlaceholder" = "Password";
 "loginButtonText" = "Login";
+"wrongPasswordAlertText" = "Wrong Password";
+"noSuchUserAlertText" = "There is no such user";

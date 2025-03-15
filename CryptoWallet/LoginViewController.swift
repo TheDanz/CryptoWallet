@@ -1,3 +1,4 @@
+import os
 import UIKit
 
 final class LoginViewController: UIViewController {
@@ -55,7 +56,28 @@ final class LoginViewController: UIViewController {
     // MARK: Button Actions
     
     @objc
-    private func loginButtonClick() { }
+    private func loginButtonClick() {
+        
+        let keychainService = KeychainService()
+        let password = keychainService.getPassword(service: "Credentials", account: loginInputView.textField.text ?? "")
+        
+        if password != nil {
+            if password == passwordInputView.textField.text {
+                var userDefaults = UserDefaultsService()
+                userDefaults.isLoggedIn = true
+                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(TabBarController())
+                logger.info("Success login")
+            } else {
+                let alert = AlertFactory.createOKAlert(title: LoginScreenStrings.wrongPasswordAlertText.localized())
+                present(alert, animated: true)
+                logger.info("Wrong password")
+            }
+        } else {
+            let alert = AlertFactory.createOKAlert(title: LoginScreenStrings.noSuchUserAlertText.localized())
+            present(alert, animated: true)
+            logger.info("There is no such user")
+        }
+    }
     
     // MARK: Setup UI
     
@@ -102,3 +124,5 @@ final class LoginViewController: UIViewController {
         loginButton.heightAnchor.constraint(equalToConstant: 55).isActive = true
     }
 }
+
+private let logger = Logger()

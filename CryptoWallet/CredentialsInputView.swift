@@ -10,7 +10,7 @@ final class CredentialsInputView: UIView {
         return imageView
     }()
     
-    private var textField: UITextField = {
+    var textField: UITextField = {
         let textField = UITextField()
         textField.font = .regular15
         textField.translatesAutoresizingMaskIntoConstraints = false
