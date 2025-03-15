@@ -12,6 +12,8 @@ extension UIColor {
     static let dark = UIColor(red: 25/255, green: 28/255, blue: 50/255, alpha: 1)
     static let ebonyClay = UIColor(red: 38/255, green: 39/255, blue: 60/255, alpha: 1)
     static let mountainMist = UIColor(red: 147/255, green: 149/255, blue: 164/255, alpha: 1)
+    static let manatee = UIColor(red: 147/255, green: 149/255, blue: 165/255, alpha: 1)
+    static let solitude = UIColor(red: 235/255, green: 239/255, blue: 241/255, alpha: 1)
     
     static let unselectedTabBarItem = UIColor(red: 206/255, green: 208/255, blue: 222/255, alpha: 1)
 }

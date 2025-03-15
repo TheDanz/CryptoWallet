@@ -54,7 +54,7 @@ final class CoinDetailsViewController: UIViewController {
     }()
     
     private lazy var timeRangeControl = {
-        let control = UIView()
+        let control = TimeRangeControl()
         control.translatesAutoresizingMaskIntoConstraints = false
         return control
     }()
