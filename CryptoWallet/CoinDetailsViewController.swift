@@ -171,7 +171,7 @@ final class CoinDetailsViewController: UIViewController {
     }
     
     private func setupView() {
-        view.backgroundColor = .coinDetailsScreenBackground
+        view.backgroundColor = .mainBackgroundColor
         view.addSubview(backButton)
         view.addSubview(titleLabel)
         view.addSubview(valueLabel)
