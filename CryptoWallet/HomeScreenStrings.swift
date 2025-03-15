@@ -1,4 +1,7 @@
 enum HomeScreenStrings: String {
+    
+    static let tableName = "HomeScreenStrings"
+    
     case headerText = "headerText"
     case subheaderText = "subheaderText"
     case learnMoreText = "learnMoreText"
@@ -6,5 +9,5 @@ enum HomeScreenStrings: String {
     case update = "update"
     case exit = "exit"
     
-    func localized() -> String { rawValue.localized() }
+    func localized() -> String { rawValue.localized(tableName: Self.tableName) }
 }

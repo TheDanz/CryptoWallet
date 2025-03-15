@@ -28,7 +28,7 @@ final class HomeViewController: UIViewController {
         let button = UIButton()
         button.layer.cornerRadius = 24
         button.setImage(.dots, for: .normal)
-        button.backgroundColor = .dotsButtonBackground
+        button.backgroundColor = .whiteTranslucentBackground
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -223,5 +223,18 @@ extension HomeViewController: UITableViewDataSource {
 extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         70
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let viewController = CoinDetailsViewController(
+            fullName: "Etherium",
+            shortName: "ETH",
+            value: "32,128.80",
+            volatility: "2.5",
+            trend: true,
+            capitalizationValue: "231,233",
+            supplyValue: "114.211"
+        )
+        navigationController?.pushViewController(viewController, animated: true)
     }
 }

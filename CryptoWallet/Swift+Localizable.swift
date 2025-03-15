@@ -1,7 +1,7 @@
 import Foundation
 
 extension String {
-    func localized() -> String {
-        NSLocalizedString(self, tableName: "HomeScreenStrings", bundle: .main, comment: String())
+    func localized(tableName: String) -> String {
+        NSLocalizedString(self, tableName: tableName, bundle: .main, comment: String())
     }
 }
