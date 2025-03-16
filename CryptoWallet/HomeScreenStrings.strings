@@ -4,3 +4,5 @@
 "trendingListHeaderText" = "Trending";
 "update" = "Обновить";
 "exit" = "Выйти";
+"descSort" = "Рост";
+"ascSort" = "Спад";

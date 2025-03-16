@@ -8,6 +8,8 @@ enum HomeScreenStrings: String {
     case trendingListHeaderText = "trendingListHeaderText"
     case update = "update"
     case exit = "exit"
+    case descSort = "descSort"
+    case ascSort = "ascSort"
     
     func localized() -> String { rawValue.localized(tableName: Self.tableName) }
 }

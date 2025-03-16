@@ -87,6 +87,13 @@ final class HomeViewController: UIViewController {
         return button
     }()
     
+    private lazy var sortDropDownMenuView = {
+        let dropDownMenuView = DropDownMenuView()
+        dropDownMenuView.isHidden = true
+        dropDownMenuView.translatesAutoresizingMaskIntoConstraints = false
+        return dropDownMenuView
+    }()
+    
     private lazy var coinsTableView = {
         let tableView = UITableView()
         tableView.register(CoinTableViewCell.self, forCellReuseIdentifier: CoinTableViewCell.identifier)
@@ -151,7 +158,7 @@ final class HomeViewController: UIViewController {
     
     @objc
     private func sortButtonClick() {
-        sortButton.transform = sortButton.transform.scaledBy(x: 1, y: -1)
+        sortDropDownMenuView.isHidden.toggle()
     }
     
     @objc
@@ -172,6 +179,7 @@ final class HomeViewController: UIViewController {
         setupSortButton()
         setupCoinsTableView()
         setupDataLoadingIndicator()
+        setupSortDropDownMenuView()
     }
     
     private func setupView() {
@@ -182,6 +190,7 @@ final class HomeViewController: UIViewController {
         view.addSubview(boxObjectImageView)
         view.addSubview(trendingListView)
         view.addSubview(dropDownMenuView)
+        view.addSubview(sortDropDownMenuView)
         view.backgroundColor = .sweetPink
     }
     
@@ -272,6 +281,23 @@ final class HomeViewController: UIViewController {
     private func setupDataLoadingIndicator() {
         dataLoadingIndicatior.centerXAnchor.constraint(equalTo: coinsTableView.centerXAnchor).isActive = true
         dataLoadingIndicatior.centerYAnchor.constraint(equalTo: coinsTableView.centerYAnchor).isActive = true
+    }
+    
+    private func setupSortDropDownMenuView() {
+        let sortASC = DropDownMenuView.ItemView(image: .sortAscIcon, text: HomeScreenStrings.descSort.localized()) {
+            self.coins.sort { $0.marketData.percentChangeUsdLastHour > $1.marketData.percentChangeUsdLastHour }
+            self.coinsTableView.reloadData()
+            self.sortDropDownMenuView.isHidden = true
+        }
+        let sortDESC = DropDownMenuView.ItemView(image: .sortDescIcon, text: HomeScreenStrings.ascSort.localized()) {
+            self.coins.sort { $0.marketData.percentChangeUsdLastHour < $1.marketData.percentChangeUsdLastHour }
+            self.coinsTableView.reloadData()
+            self.sortDropDownMenuView.isHidden = true
+        }
+        sortDropDownMenuView.addItems([sortASC, sortDESC])
+        sortDropDownMenuView.topAnchor.constraint(equalTo: sortButton.bottomAnchor, constant: 8).isActive = true
+        sortDropDownMenuView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -56).isActive = true
+        sortDropDownMenuView.widthAnchor.constraint(equalToConstant: 157).isActive = true
     }
 }
 
