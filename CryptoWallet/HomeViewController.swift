@@ -33,6 +33,13 @@ final class HomeViewController: UIViewController {
         return button
     }()
     
+    private lazy var dropDownMenuView = {
+        let dropDownMenuView = DropDownMenuView()
+        dropDownMenuView.isHidden = true
+        dropDownMenuView.translatesAutoresizingMaskIntoConstraints = false
+        return dropDownMenuView
+    }()
+    
     private lazy var learnMoreButton = {
         let button = UIButton()
         button.layer.cornerRadius = 17.5
@@ -96,7 +103,9 @@ final class HomeViewController: UIViewController {
     // MARK: Buttons Actions
     
     @objc
-    private func menuButtonClick() { }
+    private func dotsButtonClick() {
+        dropDownMenuView.isHidden.toggle()
+    }
     
     @objc
     private func sortButtonClick() {
@@ -113,6 +122,7 @@ final class HomeViewController: UIViewController {
         setupHeaderLabel()
         setupSubheaderLabel()
         setupDotsButton()
+        setupDropDownMenu()
         setupLearnMoreButton()
         setupBoxObjectImageView()
         setupTrendingListView()
@@ -128,6 +138,7 @@ final class HomeViewController: UIViewController {
         view.addSubview(learnMoreButton)
         view.addSubview(boxObjectImageView)
         view.addSubview(trendingListView)
+        view.addSubview(dropDownMenuView)
         view.backgroundColor = .sweetPink
     }
         
@@ -144,11 +155,24 @@ final class HomeViewController: UIViewController {
     }
     
     private func setupDotsButton() {
-        dotsButton.addTarget(self, action: #selector(menuButtonClick), for: .touchUpInside)
+        dotsButton.addTarget(self, action: #selector(dotsButtonClick), for: .touchUpInside)
         dotsButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         dotsButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25).isActive = true
         dotsButton.widthAnchor.constraint(equalToConstant: 48).isActive = true
         dotsButton.heightAnchor.constraint(equalToConstant: 48).isActive = true
+    }
+    
+    private func setupDropDownMenu() {
+        let updateItem = DropDownMenuView.ItemView(image: .rocketIcon, text: "Обновить")
+        let exitItem = DropDownMenuView.ItemView(image: .trashIcon, text: "Выйти") {
+            var userDefaults = UserDefaultsService()
+            userDefaults.isLoggedIn = false
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(LoginViewController())
+        }
+        dropDownMenuView.addItems([updateItem, exitItem])
+        dropDownMenuView.topAnchor.constraint(equalTo: dotsButton.bottomAnchor, constant: 8).isActive = true
+        dropDownMenuView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -56).isActive = true
+        dropDownMenuView.widthAnchor.constraint(equalToConstant: 157).isActive = true
     }
     
     private func setupLearnMoreButton() {
