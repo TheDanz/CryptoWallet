@@ -90,7 +90,7 @@ final class LoginViewController: UIViewController {
     }
     
     private func setupView() {
-        view.backgroundColor = .mainBackgroundColor
+        view.backgroundColor = .mainBackground
         view.addSubview(logoImageView)
         view.addSubview(loginInputView)
         view.addSubview(passwordInputView)
