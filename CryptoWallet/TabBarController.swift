@@ -18,9 +18,13 @@ final class TabBarController: UITabBarController {
         
         let homeVC = HomeViewController()
         let quotesVC = UIViewController()
+        quotesVC.view.backgroundColor = .yellow
         let walletVC = UIViewController()
+        walletVC.view.backgroundColor = .green
         let documentsVC = UIViewController()
+        documentsVC.view.backgroundColor = .orange
         let profileVC = UIViewController()
+        profileVC.view.backgroundColor = .brown
         
         let homeNC = UINavigationController(rootViewController: homeVC)
         setViewControllers([homeNC, quotesVC, walletVC, documentsVC, profileVC], animated: false)
