@@ -206,8 +206,13 @@ final class HomeViewController: UIViewController {
     }
     
     private func setupDropDownMenu() {
-        let updateItem = DropDownMenuView.ItemView(image: .rocketIcon, text: "Обновить")
-        let exitItem = DropDownMenuView.ItemView(image: .trashIcon, text: "Выйти") {
+        let updateItem = DropDownMenuView.ItemView(image: .rocketIcon, text: HomeScreenStrings.update.localized()) {
+            self.coins.removeAll()
+            self.coinsTableView.reloadData()
+            self.fetchData()
+            self.dropDownMenuView.isHidden = true
+        }
+        let exitItem = DropDownMenuView.ItemView(image: .trashIcon, text: HomeScreenStrings.exit.localized()) {
             var userDefaults = UserDefaultsService()
             userDefaults.isLoggedIn = false
             (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(LoginViewController())
