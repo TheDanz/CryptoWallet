@@ -4,7 +4,7 @@ protocol URLRequestConvertible {
     func makeURLRequest() throws -> URLRequest
 }
 
-enum EventRouter: URLRequestConvertible {
+enum CoinRouter: URLRequestConvertible {
     case fetch(coinSymbol: String)
     
     var endpoint: String {
@@ -46,51 +46,9 @@ enum NetworkError: Error {
 }
 
 protocol NetworkServiceProtocol {
-    func fetchCoins(coinSymbol: CoinSymbol) async throws -> Response
+    func fetchCoins(coinSymbol: Response.CoinSymbol) async throws -> Response
 }
 
-
-struct Response: Codable {
-    let data: CoinData
-    
-    struct CoinData: Codable {
-        let symbol: String
-        let name: String
-        let marketData: MarketData
-        let marketCap: MarketCapitalization
-        let supply: Supply
-        
-        private enum CodingKeys: String, CodingKey {
-            case symbol
-            case name
-            case marketData = "market_data"
-            case marketCap = "marketcap"
-            case supply
-        }
-    }
-    
-    struct MarketData: Codable {
-        let priceUSD: Double
-        let percentChangeUsdLastHour: Double
-        
-        private enum CodingKeys: String, CodingKey {
-            case priceUSD = "price_usd"
-            case percentChangeUsdLastHour = "percent_change_usd_last_1_hour"
-        }
-    }
-    
-    struct MarketCapitalization: Codable {
-        let capitalizationUSD: Double
-
-        private enum CodingKeys: String, CodingKey {
-            case capitalizationUSD = "current_marketcap_usd"
-        }
-    }
-    
-    struct Supply: Codable {
-        let circulating: Double
-    }
-}
 
 class BaseNetworkService<Router: URLRequestConvertible> {
     private let urlSession: URLSession
@@ -125,15 +83,15 @@ class BaseNetworkService<Router: URLRequestConvertible> {
     }
 }
 
-class NetworkService: BaseNetworkService<EventRouter>, NetworkServiceProtocol {
+class NetworkService: BaseNetworkService<CoinRouter>, NetworkServiceProtocol {
     
-    func fetchCoins(coinSymbol: CoinSymbol) async throws -> Response {
+    func fetchCoins(coinSymbol: Response.CoinSymbol) async throws -> Response {
         return try await request(Response.self, router: .fetch(coinSymbol: coinSymbol.rawValue))
     }
 }
 
 protocol NetworkRepositoryProtocol {
-    func fetchCoins(coinSymbol: CoinSymbol) async throws -> Response
+    func fetchCoins(coinSymbol: Response.CoinSymbol) async throws -> Response
 }
 
 // MARK: - NetworkRepository
@@ -145,20 +103,7 @@ class NetworkRepository: NetworkRepositoryProtocol {
         self.networkService = networkService
     }
     
-    func fetchCoins(coinSymbol: CoinSymbol) async throws -> Response {
+    func fetchCoins(coinSymbol: Response.CoinSymbol) async throws -> Response {
         return try await networkService.fetchCoins(coinSymbol: coinSymbol)
     }
-}
-
-enum CoinSymbol: String {
-    case btc
-    case eth
-    case tron
-    case luna
-    case polkadot
-    case dogecoin
-    case tether
-    case stellar
-    case cardano
-    case xrp
 }

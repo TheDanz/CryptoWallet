@@ -1,9 +1,8 @@
-import os
 import UIKit
 
 final class HomeViewController: UIViewController {
     
-    var coins: [Response.CoinData] = []
+    private var viewModel: ViewModel = ViewModel()
     
     // MARK: Views
     
@@ -115,38 +114,8 @@ final class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        fetchData()
-    }
-    
-    // MARK: Data
-    
-    private func fetchData() {
-        dataLoadingIndicatior.startAnimating()
-        
-        let networkRepository = NetworkRepository(networkService: NetworkService())
-        let symbols: [CoinSymbol] = [.btc, .eth, .tron, .luna, .polkadot, .dogecoin, .tether, .stellar, .cardano, .xrp]
-        let dispatchGroup = DispatchGroup()
-        
-        for symbol in symbols {
-            
-            dispatchGroup.enter()
-            Task {
-                defer { dispatchGroup.leave() }
-                
-                do {
-                    let response = try await networkRepository.fetchCoins(coinSymbol: symbol)
-                    self.coins.append(response.data)
-                } catch {
-                    logger.info("Error fetching data for \(symbol.rawValue): \(error.localizedDescription)")
-                }
-            }
-        }
-        
-        dispatchGroup.notify(queue: .main) {
-            logger.info("All data fetched")
-            self.coinsTableView.reloadData()
-            self.dataLoadingIndicatior.stopAnimating()
-        }
+        bindViewModel()
+        fetchAndStartAnimatingIndicator()
     }
     
     // MARK: Buttons Actions
@@ -163,6 +132,20 @@ final class HomeViewController: UIViewController {
     
     @objc
     private func learnMoreButtonClick() { }
+    
+    // MARK: ViewModel
+    
+    private func bindViewModel() {
+        self.viewModel.onCoinsUpdated = { [weak self] in
+            self?.coinsTableView.reloadData()
+            self?.dataLoadingIndicatior.stopAnimating()
+        }
+    }
+    
+    private func fetchAndStartAnimatingIndicator() {
+        dataLoadingIndicatior.startAnimating()
+        viewModel.fetchCoins()
+    }
     
     // MARK: Setup UI
     
@@ -221,9 +204,7 @@ final class HomeViewController: UIViewController {
     
     private func setupDropDownMenu() {
         let updateItem = DropDownMenuView.ItemView(image: .rocketIcon, text: HomeScreenStrings.update.localized()) {
-            self.coins.removeAll()
-            self.coinsTableView.reloadData()
-            self.fetchData()
+            self.fetchAndStartAnimatingIndicator()
             self.dropDownMenuView.isHidden = true
         }
         let exitItem = DropDownMenuView.ItemView(image: .trashIcon, text: HomeScreenStrings.exit.localized()) {
@@ -292,13 +273,11 @@ final class HomeViewController: UIViewController {
     
     private func setupSortDropDownMenuView() {
         let sortASC = DropDownMenuView.ItemView(image: .sortAscIcon, text: HomeScreenStrings.descSort.localized()) {
-            self.coins.sort { $0.marketData.percentChangeUsdLastHour > $1.marketData.percentChangeUsdLastHour }
-            self.coinsTableView.reloadData()
+            self.viewModel.sortCoins()
             self.sortDropDownMenuView.isHidden = true
         }
         let sortDESC = DropDownMenuView.ItemView(image: .sortDescIcon, text: HomeScreenStrings.ascSort.localized()) {
-            self.coins.sort { $0.marketData.percentChangeUsdLastHour < $1.marketData.percentChangeUsdLastHour }
-            self.coinsTableView.reloadData()
+            self.viewModel.sortCoins(ascending: false)
             self.sortDropDownMenuView.isHidden = true
         }
         sortDropDownMenuView.addItems([sortASC, sortDESC])
@@ -308,4 +287,44 @@ final class HomeViewController: UIViewController {
     }
 }
 
-private let logger = Logger()
+// MARK: UITableViewDelegate
+
+extension HomeViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        80
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let viewController = CoinDetailsViewController(
+            fullName: viewModel.coin(at: indexPath.row).name,
+            shortName: viewModel.coin(at: indexPath.row).symbol,
+            value: viewModel.coin(at: indexPath.row).marketData.priceUSD,
+            volatility: viewModel.coin(at: indexPath.row).marketData.percentChangeUsdLastHour,
+            capitalizationValue: viewModel.coin(at: indexPath.row).marketCap.capitalizationUSD,
+            supplyValue: viewModel.coin(at: indexPath.row).supply.circulating
+        )
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+}
+
+// MARK: UITableViewDataSource
+
+extension HomeViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        viewModel.numberOfCoins()
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CoinTableViewCell.identifier) as? CoinTableViewCell else {
+            return UITableViewCell()
+        }
+        cell.configure(
+            image: viewModel.coin(at: indexPath.row).symbol == "BTC" ? .bitcoinIcon : .cryptoCoinIcon,
+            fullName: viewModel.coin(at: indexPath.row).name,
+            shortName: viewModel.coin(at: indexPath.row).symbol,
+            value: viewModel.coin(at: indexPath.row).marketData.priceUSD,
+            volatility: viewModel.coin(at: indexPath.row).marketData.percentChangeUsdLastHour
+        )
+        return cell
+    }
+}
