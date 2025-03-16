@@ -63,7 +63,8 @@ final class CoinTableViewCell: UITableViewCell {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: coder)
+        setupUI()
     }
     
     // MARK: Setup UI
@@ -96,23 +97,27 @@ final class CoinTableViewCell: UITableViewCell {
     }
     
     private func setupFullNameLabel() {
-        fullNameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
+        fullNameLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -11.5).isActive = true
         fullNameLabel.leadingAnchor.constraint(equalTo: coinImageView.trailingAnchor, constant: 19).isActive = true
+        fullNameLabel.heightAnchor.constraint(equalToConstant: 27).isActive = true
     }
     
     private func setupShortNameLabel() {
-        shortNameLabel.topAnchor.constraint(equalTo: fullNameLabel.bottomAnchor, constant: 3).isActive = true
+        shortNameLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 14.5).isActive = true
         shortNameLabel.leadingAnchor.constraint(equalTo: coinImageView.trailingAnchor, constant: 19).isActive = true
+        shortNameLabel.heightAnchor.constraint(equalToConstant: 21).isActive = true
     }
     
     private func setupValueLabel() {
-        valueLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
+        valueLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -11.5).isActive = true
         valueLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -25).isActive = true
+        valueLabel.heightAnchor.constraint(equalToConstant: 27).isActive = true
     }
     
     private func setupVolatilityLabel() {
-        volatilityLabel.topAnchor.constraint(equalTo: valueLabel.bottomAnchor, constant: 3).isActive = true
+        volatilityLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 14.5).isActive = true
         volatilityLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -25).isActive = true
+        volatilityLabel.heightAnchor.constraint(equalToConstant: 21).isActive = true
     }
     
     private func setuptrendImageView() {

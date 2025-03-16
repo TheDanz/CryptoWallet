@@ -132,14 +132,14 @@ final class CoinDetailsViewController: UIViewController {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: coder)
+        setupUI()
     }
     
     // MARK: ViewController Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.setHidesBackButton(true, animated: true)
         setupUI()
     }
     
@@ -154,6 +154,7 @@ final class CoinDetailsViewController: UIViewController {
     
     private func setupUI() {
         setupView()
+        setupNavigationBar()
         setupBackButton()
         setupTitleLabel()
         setupValueLabel()
@@ -179,9 +180,13 @@ final class CoinDetailsViewController: UIViewController {
         view.addSubview(statisticView)
     }
     
+    private func setupNavigationBar() {
+        navigationController?.navigationBar.isHidden = true
+    }
+    
     private func setupBackButton() {
         backButton.addTarget(self, action: #selector(backButtonClick), for: .touchUpInside)
-        backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32).isActive = true
         backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25).isActive = true
         backButton.widthAnchor.constraint(equalToConstant: 48).isActive = true
         backButton.heightAnchor.constraint(equalToConstant: 48).isActive = true

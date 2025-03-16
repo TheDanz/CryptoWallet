@@ -3,7 +3,7 @@ import UIKit
 
 final class HomeViewController: UIViewController {
     
-    private var coins: [Response.CoinData] = []
+    var coins: [Response.CoinData] = []
     
     // MARK: Views
     
@@ -168,6 +168,7 @@ final class HomeViewController: UIViewController {
     
     private func setupUI() {
         setupView()
+        setupNavigationBar()
         setupHeaderLabel()
         setupSubheaderLabel()
         setupDotsButton()
@@ -194,8 +195,12 @@ final class HomeViewController: UIViewController {
         view.backgroundColor = .sweetPink
     }
     
+    private func setupNavigationBar() {
+        navigationController?.navigationBar.isHidden = true
+    }
+    
     private func setupHeaderLabel() {
-        headerLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        headerLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32).isActive = true
         headerLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25).isActive = true
         headerLabel.trailingAnchor.constraint(equalTo: dotsButton.leadingAnchor, constant: -10).isActive = true
     }
@@ -208,7 +213,7 @@ final class HomeViewController: UIViewController {
     
     private func setupDotsButton() {
         dotsButton.addTarget(self, action: #selector(dotsButtonClick), for: .touchUpInside)
-        dotsButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        dotsButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32).isActive = true
         dotsButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25).isActive = true
         dotsButton.widthAnchor.constraint(equalToConstant: 48).isActive = true
         dotsButton.heightAnchor.constraint(equalToConstant: 48).isActive = true
@@ -260,12 +265,14 @@ final class HomeViewController: UIViewController {
     private func setupTrendingListHeaderLabel() {
         trendingListHeaderLabel.topAnchor.constraint(equalTo: trendingListView.topAnchor, constant: 24).isActive = true
         trendingListHeaderLabel.leadingAnchor.constraint(equalTo: trendingListView.leadingAnchor, constant: 25).isActive = true
+        trendingListHeaderLabel.trailingAnchor.constraint(equalTo: sortButton.leadingAnchor, constant: -10).isActive = true
     }
     
     private func setupSortButton() {
         sortButton.addTarget(self, action: #selector(sortButtonClick), for: .touchUpInside)
         sortButton.topAnchor.constraint(equalTo: trendingListView.topAnchor, constant: 30).isActive = true
         sortButton.trailingAnchor.constraint(equalTo: trendingListView.trailingAnchor, constant: -25).isActive = true
+        sortButton.widthAnchor.constraint(equalToConstant: 24).isActive = true
     }
     
     private func setupCoinsTableView() {
@@ -298,46 +305,6 @@ final class HomeViewController: UIViewController {
         sortDropDownMenuView.topAnchor.constraint(equalTo: sortButton.bottomAnchor, constant: 8).isActive = true
         sortDropDownMenuView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -56).isActive = true
         sortDropDownMenuView.widthAnchor.constraint(equalToConstant: 157).isActive = true
-    }
-}
-
-// MARK: TableViewDelegate & TableViewDataSource
-
-extension HomeViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        coins.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: CoinTableViewCell.identifier) as? CoinTableViewCell else {
-            return UITableViewCell()
-        }
-        cell.configure(
-            image: coins[indexPath.row].symbol == "BTC" ? .bitcoinIcon : .cryptoCoinIcon,
-            fullName: coins[indexPath.row].name,
-            shortName: coins[indexPath.row].symbol,
-            value: coins[indexPath.row].marketData.priceUSD,
-            volatility: coins[indexPath.row].marketData.percentChangeUsdLastHour
-        )
-        return cell
-    }
-}
-
-extension HomeViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        70
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let viewController = CoinDetailsViewController(
-            fullName: coins[indexPath.row].name,
-            shortName: coins[indexPath.row].symbol,
-            value: coins[indexPath.row].marketData.priceUSD,
-            volatility: coins[indexPath.row].marketData.percentChangeUsdLastHour,
-            capitalizationValue: coins[indexPath.row].marketCap.capitalizationUSD,
-            supplyValue: coins[indexPath.row].supply.circulating
-        )
-        navigationController?.pushViewController(viewController, animated: true)
     }
 }
 

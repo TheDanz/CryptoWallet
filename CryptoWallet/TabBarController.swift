@@ -37,6 +37,7 @@ final class TabBarController: UITabBarController {
             let images: [UIImage] = [.tabHome, .tabQuotes, .tabWallet, .tabDocuments, .tabProfile]
             for i in 0..<items.count {
                 items[i].image = images[i]
+                items[i].imageInsets = UIEdgeInsets(top: 12, left: 0, bottom: -12, right: 0)
             }
         }
     }
