@@ -1,5 +1,5 @@
-"loginPlaceholder" = "Username";
-"passwordPlaceholder" = "Password";
-"loginButtonText" = "Login";
-"wrongPasswordAlertText" = "Wrong Password";
-"noSuchUserAlertText" = "There is no such user";
+"login_placeholder" = "Username";
+"password_placeholder" = "Password";
+"login_button_text" = "Login";
+"wrong_password_alert_text" = "Wrong Password";
+"no_such_user_alert_text" = "There is no such user";

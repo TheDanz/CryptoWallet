@@ -1,8 +1,8 @@
-"headerText" = "Home";
-"subheaderText" = "Affiliate program";
-"learnMoreText" = "Learn more";
-"trendingListHeaderText" = "Trending";
+"header_text" = "Home";
+"subheader_text" = "Affiliate program";
+"learn_more_text" = "Learn more";
+"trending_list_header_text" = "Trending";
 "update" = "Обновить";
 "exit" = "Выйти";
-"descSort" = "Рост";
-"ascSort" = "Спад";
+"desc_sort" = "Рост";
+"asc_sort" = "Спад";
