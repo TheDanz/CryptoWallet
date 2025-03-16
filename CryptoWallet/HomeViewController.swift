@@ -1,6 +1,9 @@
+import os
 import UIKit
 
 final class HomeViewController: UIViewController {
+    
+    private var coins: [Response.CoinData] = []
     
     // MARK: Views
     
@@ -93,11 +96,50 @@ final class HomeViewController: UIViewController {
         return tableView
     }()
     
+    private lazy var dataLoadingIndicatior = {
+        let activityIndicator = UIActivityIndicatorView()
+        activityIndicator.style = .large
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        return activityIndicator
+    }()
+    
     // MARK: ViewController LifeCycle
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        fetchData()
+    }
+    
+    // MARK: Data
+    
+    private func fetchData() {
+        dataLoadingIndicatior.startAnimating()
+        
+        let networkRepository = NetworkRepository(networkService: NetworkService())
+        let symbols: [CoinSymbol] = [.btc, .eth, .tron, .luna, .polkadot, .dogecoin, .tether, .stellar, .cardano, .xrp]
+        let dispatchGroup = DispatchGroup()
+        
+        for symbol in symbols {
+            
+            dispatchGroup.enter()
+            Task {
+                defer { dispatchGroup.leave() }
+                
+                do {
+                    let response = try await networkRepository.fetchCoins(coinSymbol: symbol)
+                    self.coins.append(response.data)
+                } catch {
+                    logger.info("Error fetching data for \(symbol.rawValue): \(error.localizedDescription)")
+                }
+            }
+        }
+        
+        dispatchGroup.notify(queue: .main) {
+            logger.info("All data fetched")
+            self.coinsTableView.reloadData()
+            self.dataLoadingIndicatior.stopAnimating()
+        }
     }
     
     // MARK: Buttons Actions
@@ -129,6 +171,7 @@ final class HomeViewController: UIViewController {
         setupTrendingListHeaderLabel()
         setupSortButton()
         setupCoinsTableView()
+        setupDataLoadingIndicator()
     }
     
     private func setupView() {
@@ -141,7 +184,7 @@ final class HomeViewController: UIViewController {
         view.addSubview(dropDownMenuView)
         view.backgroundColor = .sweetPink
     }
-        
+    
     private func setupHeaderLabel() {
         headerLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         headerLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25).isActive = true
@@ -214,10 +257,16 @@ final class HomeViewController: UIViewController {
     private func setupCoinsTableView() {
         coinsTableView.delegate = self
         coinsTableView.dataSource = self
+        coinsTableView.addSubview(dataLoadingIndicatior)
         coinsTableView.topAnchor.constraint(equalTo: trendingListHeaderLabel.bottomAnchor, constant: 16).isActive = true
         coinsTableView.leadingAnchor.constraint(equalTo: trendingListView.leadingAnchor).isActive = true
         coinsTableView.trailingAnchor.constraint(equalTo: trendingListView.trailingAnchor).isActive = true
         coinsTableView.bottomAnchor.constraint(equalTo: trendingListView.bottomAnchor).isActive = true
+    }
+    
+    private func setupDataLoadingIndicator() {
+        dataLoadingIndicatior.centerXAnchor.constraint(equalTo: coinsTableView.centerXAnchor).isActive = true
+        dataLoadingIndicatior.centerYAnchor.constraint(equalTo: coinsTableView.centerYAnchor).isActive = true
     }
 }
 
@@ -225,7 +274,7 @@ final class HomeViewController: UIViewController {
 
 extension HomeViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        30
+        coins.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -233,12 +282,11 @@ extension HomeViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         cell.configure(
-            image: UIImage(systemName: "eye")!,
-            fullName: String(Int.random(in: 1...1000)),
-            shortName: String(Int.random(in: 1...1000)),
-            value: String(Int.random(in: 1...1000)),
-            volatility: String(Int.random(in: 1...1000)),
-            trend: Bool.random()
+            image: coins[indexPath.row].symbol == "BTC" ? .bitcoinIcon : .cryptoCoinIcon,
+            fullName: coins[indexPath.row].name,
+            shortName: coins[indexPath.row].symbol,
+            value: coins[indexPath.row].marketData.priceUSD,
+            volatility: coins[indexPath.row].marketData.percentChangeUsdLastHour
         )
         return cell
     }
@@ -251,14 +299,15 @@ extension HomeViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let viewController = CoinDetailsViewController(
-            fullName: "Etherium",
-            shortName: "ETH",
-            value: "32,128.80",
-            volatility: "2.5",
-            trend: true,
-            capitalizationValue: "231,233",
-            supplyValue: "114.211"
+            fullName: coins[indexPath.row].name,
+            shortName: coins[indexPath.row].symbol,
+            value: coins[indexPath.row].marketData.priceUSD,
+            volatility: coins[indexPath.row].marketData.percentChangeUsdLastHour,
+            capitalizationValue: coins[indexPath.row].marketCap.capitalizationUSD,
+            supplyValue: coins[indexPath.row].supply.circulating
         )
         navigationController?.pushViewController(viewController, animated: true)
     }
 }
+
+private let logger = Logger()

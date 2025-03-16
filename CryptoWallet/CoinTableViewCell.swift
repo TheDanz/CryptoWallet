@@ -126,15 +126,14 @@ final class CoinTableViewCell: UITableViewCell {
         image: UIImage,
         fullName: String,
         shortName: String,
-        value: String,
-        volatility: String,
-        trend: Bool
+        value: Double,
+        volatility: Double
     ) {
         self.coinImageView.image = image
         self.fullNameLabel.text = fullName
         self.shortNameLabel.text = shortName
-        self.valueLabel.text = "$" + value
-        self.volatilityLabel.text = volatility + "%"
-        self.trendImageView.image = trend ? .arrowUp : .arrowDown
+        self.valueLabel.text = Formatters.formattedCurrency(amount: value)
+        self.volatilityLabel.text = Formatters.formattedPercentage(from: volatility)
+        self.trendImageView.image = volatility >= 0 ? .arrowUp : .arrowDown
     }
 }

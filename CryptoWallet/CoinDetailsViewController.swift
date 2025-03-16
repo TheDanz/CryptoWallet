@@ -117,18 +117,17 @@ final class CoinDetailsViewController: UIViewController {
     init(
         fullName: String,
         shortName: String,
-        value: String,
-        volatility: String,
-        trend: Bool,
-        capitalizationValue: String,
-        supplyValue: String
+        value: Double,
+        volatility: Double,
+        capitalizationValue: Double,
+        supplyValue: Double
     ) {
         self.titleLabel.text = "\(fullName) (\(shortName))"
-        self.valueLabel.text = "$" + value
-        self.volatilityLabel.text = volatility + "%"
-        self.trendImageView.image = trend ? .arrowUp : .arrowDown
-        self.capitalizationValueLabel.text = "$" + capitalizationValue
-        self.suplyValueLabel.text = supplyValue + " (\(shortName))"
+        self.valueLabel.text = Formatters.formattedCurrency(amount: value)
+        self.volatilityLabel.text = Formatters.formattedPercentage(from: volatility)
+        self.trendImageView.image = volatility >= 0 ? .arrowUp : .arrowDown
+        self.capitalizationValueLabel.text = Formatters.formattedCurrencyWithoutFraction(amount: capitalizationValue)
+        self.suplyValueLabel.text = "\(Int(supplyValue)) (\(shortName))"
         super.init(nibName: nil, bundle: nil)
     }
     

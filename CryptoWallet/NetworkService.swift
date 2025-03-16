@@ -133,7 +133,7 @@ class NetworkService: BaseNetworkService<EventRouter>, NetworkServiceProtocol {
 }
 
 protocol NetworkRepositoryProtocol {
-    func fetchEvents(coinSymbol: CoinSymbol) async throws -> Response
+    func fetchCoins(coinSymbol: CoinSymbol) async throws -> Response
 }
 
 // MARK: - NetworkRepository
@@ -145,7 +145,7 @@ class NetworkRepository: NetworkRepositoryProtocol {
         self.networkService = networkService
     }
     
-    func fetchEvents(coinSymbol: CoinSymbol) async throws -> Response {
+    func fetchCoins(coinSymbol: CoinSymbol) async throws -> Response {
         return try await networkService.fetchCoins(coinSymbol: coinSymbol)
     }
 }
