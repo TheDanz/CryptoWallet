@@ -81,6 +81,7 @@ final class CoinTableViewCell: UITableViewCell {
     
     private func setupView() {
         backgroundColor = .clear
+        selectionStyle = .none
         addSubview(coinImageView)
         addSubview(fullNameLabel)
         addSubview(shortNameLabel)

@@ -104,6 +104,7 @@ final class HomeViewController: UIViewController {
     
     private lazy var dataLoadingIndicatior = {
         let activityIndicator = UIActivityIndicatorView()
+        activityIndicator.color = .ebonyClay
         activityIndicator.style = .large
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         return activityIndicator
