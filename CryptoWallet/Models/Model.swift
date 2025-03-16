@@ -40,7 +40,7 @@ struct Response: Codable {
         let circulating: Double
     }
     
-    enum CoinSymbol: String {
+    enum CoinType: String {
         case btc
         case eth
         case tron
@@ -53,5 +53,5 @@ struct Response: Codable {
         case xrp
     }
     
-    static let symbols: [CoinSymbol] = [.btc, .eth, .tron, .luna, .polkadot, .dogecoin, .tether, .stellar, .cardano, .xrp]
+    static let symbols: [CoinType] = [.btc, .eth, .tron, .luna, .polkadot, .dogecoin, .tether, .stellar, .cardano, .xrp]
 }

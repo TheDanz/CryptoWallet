@@ -5,7 +5,7 @@ class NetworkRepository: NetworkRepositoryProtocol {
         self.networkService = networkService
     }
     
-    func fetchCoins(coinSymbol: Response.CoinSymbol) async throws -> Response {
+    func fetchCoins(coinSymbol: Response.CoinType) async throws -> Response {
         return try await networkService.fetchCoins(coinSymbol: coinSymbol)
     }
 }

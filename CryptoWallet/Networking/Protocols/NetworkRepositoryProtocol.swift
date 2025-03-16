@@ -1,3 +1,3 @@
 protocol NetworkRepositoryProtocol {
-    func fetchCoins(coinSymbol: Response.CoinSymbol) async throws -> Response
+    func fetchCoins(coinSymbol: Response.CoinType) async throws -> Response
 }
