@@ -26,7 +26,7 @@ This project follows the MVVM (Model-View-ViewModel) architecture pattern, which
 
 1. Clone the repository to your local machine using:
    
-   `git clone https://github.com/yourusername/CryptoWallet.git`
+   `git clone https://github.com/thedanz/CryptoWallet.git`
    
 2. Open the project in Xcode.
 
